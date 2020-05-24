@@ -1,0 +1,25 @@
+.center {
+  text-align: center;
+}
+a {
+  text-decoration: none;
+}
+.button {
+  cursor: pointer;
+  color: #3355A0;
+  font-weight: bold;
+}
+.course-list ul li {
+  display: flex;
+  line-height: 2em;
+}
+.course-list ul li span {
+  margin-right: 10px;
+}
+.course-list ul li .summary {
+  width: 300px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
