@@ -1,30 +1,57 @@
-import axios from 'axios'
+import { request } from 'graphql-request'
 import config from './config';
 
 async function getCourseDetail(id:number) {
-    const axioResp = await axios.get(config.baseApiUrl + 'course/detail/' + id);
-    return axioResp.data;
-}
-
-async function deleteCourse(id:number) {
-    const axioResp = await axios.get(config.baseApiUrl + 'course/delete/' + id);
-    return axioResp.data;
+    id = id / 1;
+    const query = `query($id: Int!){
+        detail (id: $id){
+            id,name,price,summary
+        }
+    }`;
+    const resp = await request(config.baseApiUrl + 'lession', query, {id: id});
+    return resp.detail;
 }
 
 async function getCourseList() {
-    const axioResp = await axios.get(config.baseApiUrl + 'course/list');
-    return axioResp.data;
+    const query = `query($pageNo: Int){
+        list (pageNo: $pageNo){
+            id,name,price,summary
+        }
+    }`;
+    const resp = await request(config.baseApiUrl + 'lession', query);
+    return resp.list;
 }
 
-async function courseSave(body:any, id?:number) {
+async function saveCourse(body:any, id?:number) {
     id = id || 0;
-    const axioResp = await axios.post(config.baseApiUrl + 'course/save/' + id, body);
-    return axioResp.data;
+    id /= 1;
+    const query = `
+    mutation($data: CourseInputType!){
+        save (data: $data){
+            id, name
+        }
+    }`;
+    
+    const data = {...body}
+    data.price = data.price / 1;
+    const resp = await request(config.baseApiUrl + 'lession', query, {data});
+    return resp.save;
+}
+
+async function deleteCourse(id:number) {
+    id /= 1;
+    const query = `mutation($id: Int!){
+        remove (id: $id){
+            error, message
+        }
+    }`;
+    const resp = await request(config.baseApiUrl + 'lession', query, {id});
+    return resp.remove;
 }
 
 export default {
     getCourseDetail,
     getCourseList,
-    courseSave,
+    saveCourse,
     deleteCourse
 }

@@ -1,4 +1,12 @@
-A magic MOOC platform
+A Magic MOOC Platform 
+
+The project build on below these technoligies
+
+* react (hook)
+* redux
+* react-rouer
+* formik，yup
+* graphql-request
 
 ### Run the app in the development mode.
 

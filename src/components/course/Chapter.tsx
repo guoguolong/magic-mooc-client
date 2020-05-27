@@ -26,7 +26,8 @@ function Chapter({ course, dispatch }: any) {
 
 function iterate(articleMap: Array<any>, courseId:string, activeArticleId:string, level?: number): any {
     level = level || 1;
-    let articles = Object.values(articleMap);
+    let articles = articleMap;
+    // Object.values(articleMap);
     articles = articles.sort(function(a:any, b:any):number {
         return (a.seq < b.seq) ? -1: 1;
     })

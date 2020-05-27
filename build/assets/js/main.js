@@ -50,15 +50,17 @@ var topHeight = 0;
             window.tocs.map(function (anchorHash) {
                 if (isComputed) return;
                 var anchorObj = window.document.getElementById(anchorHash);
-                var rect = anchorObj.getBoundingClientRect()
-                if (rect.top > 0 && rect.top < 100) {
-                    window.utils.activateTOCAnchor(anchorHash, true);
-                    // window.scrollTo({
-                    //     left: 0,
-                    //     top: anchorObj.offsetTop,
-                    //     behavior: 'smooth'
-                    // })
-                    isComputed = true;
+                if (anchorObj) {
+                    var rect = anchorObj.getBoundingClientRect()
+                    if (rect.top > 0 && rect.top < 100) {
+                        window.utils.activateTOCAnchor(anchorHash, true);
+                        // window.scrollTo({
+                        //     left: 0,
+                        //     top: anchorObj.offsetTop,
+                        //     behavior: 'smooth'
+                        // })
+                        isComputed = true;
+                    }
                 }
             })
         }

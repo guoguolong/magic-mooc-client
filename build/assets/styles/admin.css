@@ -1,0 +1,14 @@
+header {
+  background-color: #333;
+  height: 60px;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+header .logo {
+  font-size: 40px;
+}
+.container {
+  padding: 40px;
+}

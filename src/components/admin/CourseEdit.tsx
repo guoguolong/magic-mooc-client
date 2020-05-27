@@ -36,7 +36,7 @@ export default () => {
                         .required('Required'),
                 })}
                 onSubmit={async (values, { setSubmitting }) => {
-                    const resp = await apis.courseSave(values, courseId);
+                    const resp = await apis.saveCourse(values, courseId);
                     if (resp.error !== 999) {
                         setCourse(resp);
                         setSaved(true)
