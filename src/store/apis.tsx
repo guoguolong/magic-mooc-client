@@ -8,7 +8,7 @@ async function getCourseDetail(id:number) {
             id,name,price,summary
         }
     }`;
-    const resp = await request(config.baseApiUrl + 'lession', query, {id: id});
+    const resp = await request(config.baseApiUrl + 'course', query, {id: id});
     return resp.detail;
 }
 
@@ -18,7 +18,7 @@ async function getCourseList() {
             id,name,price,summary
         }
     }`;
-    const resp = await request(config.baseApiUrl + 'lession', query);
+    const resp = await request(config.baseApiUrl + 'course', query);
     return resp.list;
 }
 
@@ -34,7 +34,7 @@ async function saveCourse(body:any, id?:number) {
     
     const data = {...body}
     data.price = data.price / 1;
-    const resp = await request(config.baseApiUrl + 'lession', query, {data});
+    const resp = await request(config.baseApiUrl + 'course', query, {data});
     return resp.save;
 }
 
@@ -45,7 +45,7 @@ async function deleteCourse(id:number) {
             error, message
         }
     }`;
-    const resp = await request(config.baseApiUrl + 'lession', query, {id});
+    const resp = await request(config.baseApiUrl + 'course', query, {id});
     return resp.remove;
 }
 

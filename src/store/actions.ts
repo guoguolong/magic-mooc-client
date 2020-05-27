@@ -60,7 +60,7 @@ export function fetchCourse(courseId?: number, articleId?: number) {
             }
         }`;
         courseId = courseId / 1;
-        const resp = await request(config.baseApiUrl + 'lession', query, {id: courseId});
+        const resp = await request(config.baseApiUrl + 'course', query, {id: courseId});
         course = resp.summary;
     
         if (!articleId) {
