@@ -17,7 +17,7 @@ const mapStateToProps = (state: any) => {
 }
 
 function parseMD(course: any, dispatch: any) {
-    const mdContent = course.activeArticle && course.activeArticle.content || '';
+    const mdContent = course.activeArticle ? course.activeArticle.content : '';
 
     function tocCallback(html: any, ast: any) {
         dispatch({

@@ -1,4 +1,3 @@
-import ApolloClient from 'apollo-boost'
 import { Course } from '../datatypes'
 import apis from './apis';
 
@@ -20,10 +19,10 @@ function _iteratePathIds(articles: Array<any>, parentIds?: Array<number>) {
 function _setActiveArticlePath(articles: Array<any>, paths: Array<number>) {
     paths = paths || [];
     // const currArticle = articles[paths[0]]; // for branch 'master', it's a map
-    const currArticle = articles.find(element => element.id == paths[0]);
+    const currArticle = articles.find(element => element.id === paths[0]);
     if (!currArticle) return;
     currArticle.is_open = true;
-    if (paths.length == 1) { // 路径中的最后一个节点(当前节点)
+    if (paths.length === 1) { // 路径中的最后一个节点(当前节点)
         currArticle.is_active = true;
     }
     if (currArticle.children) {

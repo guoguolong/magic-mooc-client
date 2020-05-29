@@ -37,7 +37,7 @@ function iterate(articleMap: Array<any>, courseId:string, activeArticleId:string
         if (item.is_active) {
             aClass += ' active';
         }
-        if (item.id == activeArticleId) {
+        if (item.id === activeArticleId) {
             item.is_open = true;
             item.active = true;
         }

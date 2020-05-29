@@ -65,7 +65,7 @@ function RenderTocItem({ level, toc, activeAnchorHash }: any) {
     let tocAnchorHash = win.utils.createTOCAnchorNameByHash(anchorHash);
     win.tocs.push(anchorHash)
 
-    let activeName = (toc.n && activeAnchorHash == anchorHash) ? 'active' : ''
+    let activeName = (toc.n && activeAnchorHash === anchorHash) ? 'active' : ''
     if (activeName) {
         activeTocHash = anchorHash
     }
