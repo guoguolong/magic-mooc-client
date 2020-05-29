@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
@@ -48,15 +48,12 @@ function ArticleTOC({ toc, dispatch }: any) {
 let activeTocHash = '';
 const win:any = window;
 function renderToc(toc: any, activeAnchorHash: string) {
-    const subTocs = [];
     if (!toc || !toc.c || !toc.c.length) return;
     if (!activeAnchorHash) {
         activeAnchorHash = win.utils.createHashByTOCName(toc.c[0].n); 
     }
 
-    let count = 0;
     const content = toc.c.map((subToc: any) => {
-        count++;
         return <RenderTocItem level="1" key={subToc.n} toc={subToc} activeAnchorHash={activeAnchorHash} />;
     })
     return (content);

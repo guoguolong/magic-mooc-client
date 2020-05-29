@@ -5,10 +5,12 @@
   "dependencies": {
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
+    "apollo-boost": "^0.4.9",
     "axios": "^0.19.2",
     "emotion": "^10.0.27",
     "formik": "^2.1.4",
-    "graphql-request": "^1.8.2",
+    "graphql": "^15.0.0",
+    "graphql-tag": "^2.10.3",
     "highlight.js": "^10.0.2",
     "less": "^3.11.1",
     "markdown-it": "^10.0.0",

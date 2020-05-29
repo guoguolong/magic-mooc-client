@@ -4,5 +4,6 @@ export  interface Article {
 export interface Course {
     name?: string,
     articles: Array<Article>,
+    summary?: string,
     [propName: string]: any,
 }

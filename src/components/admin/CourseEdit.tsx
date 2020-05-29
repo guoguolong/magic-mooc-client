@@ -20,8 +20,8 @@ export default () => {
     }, [courseId])
     return (
         <div className="form-container">
-            <h1>课程编辑</h1>
-            <Link to="/admin">回课程列表</Link>
+            <h1>Course Edit</h1>
+            <Link to="/admin">Back to list</Link>
             <Formik
                 enableReinitialize={true}
                 initialValues={{ name: course.name, id: course.id, summary: course.summary, price: course.price }}
@@ -37,11 +37,11 @@ export default () => {
                 })}
                 onSubmit={async (values, { setSubmitting }) => {
                     const resp = await apis.saveCourse(values, courseId);
-                    if (resp.error !== 999) {
+                    if (resp.error) {
+                        setMessage(resp.message);
+                    } else {
                         setCourse(resp);
                         setSaved(true)
-                    } else {
-                        setMessage(resp.message);
                     }
                 }}
             >
@@ -49,22 +49,22 @@ export default () => {
                     {saved && <Redirect to="/admin" />}
                     {message && <div className="error">{message}</div>}
                     <div className="row">
-                        <label htmlFor="name">标题：</label>
+                        <label htmlFor="name">Title: </label>
                         <Field name="name" type="text" />
                         <ErrorMessage name="name" />
                     </div>
                     <div className="row">
-                        <label htmlFor="summary">简介：</label>
+                        <label htmlFor="summary">Intro: </label>
                         <Field name="summary" as="textarea" />
                         <ErrorMessage name="summary" />
                     </div>
                     <div className="row">
-                        <div><label htmlFor="price">价格：</label>
+                        <div><label htmlFor="price">Price: </label>
                             <Field name="price" type="text" /></div>
                         <div><ErrorMessage name="price" /></div>
                     </div>
                     <div className="row center">
-                        <button type="submit">存 储</button>
+                        <button type="submit">Save</button>
                     </div>
                 </Form>
             </Formik>

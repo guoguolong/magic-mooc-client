@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link, useRouteMatch, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 const mapStateToProps = (state: any) => {
     return {
@@ -9,7 +9,6 @@ const mapStateToProps = (state: any) => {
 }
 export default connect(mapStateToProps)(Chapter)
 function Chapter({ course, dispatch }: any) {
-    const match = useRouteMatch();
     const {courseId, articleId} =  useParams();
     const list = iterate(course.articles, courseId, articleId);
     return (
@@ -34,7 +33,7 @@ function iterate(articleMap: Array<any>, courseId:string, activeArticleId:string
     return articles.map((item: any) => {
         let subMenus = <></>;
         let iconStyle = 'fas';
-        let aClass = item.parent_id && '' || 'top';
+        let aClass = item.parent_id ? '' : 'top';
         if (item.is_active) {
             aClass += ' active';
         }

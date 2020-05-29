@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import apis from '../../store/apis'
 import '../../assets/styles/admin/course-list.less'
-import { useParams } from 'react-router-dom';
 
 function CourseItem({item, updateCourses}:any) {
     return (
@@ -26,7 +25,7 @@ export default () => {
         (async () => {
             function updateCourses(id:number) {
                 courseList = courseList.filter(it=> {
-                    return (it.id != id)
+                    return (it.id !== id)
                 })
 
                 const compList = courseList.map(it=> {

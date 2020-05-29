@@ -1,52 +1,106 @@
-import { request } from 'graphql-request'
+import ApolloClient from 'apollo-boost'
+import gql from 'graphql-tag';
 import config from './config';
 
-async function getCourseDetail(id:number) {
+const coureClient = new ApolloClient({
+    uri: config.baseApiUrl + 'course'
+});
+
+async function getCourseDetail(id: number) {
     id = id / 1;
-    const query = `query($id: Int!){
-        detail (id: $id){
-            id,name,price,summary
+    const resp = await coureClient.query({
+        query: gql`
+            query($id: Int!){
+                detail (id: $id){
+                    id,name,price,summary
+                }
+            }
+        `,
+        variables: {
+            id
         }
-    }`;
-    const resp = await request(config.baseApiUrl + 'course', query, {id: id});
-    return resp.detail;
+    })
+    return resp.data.detail;    
 }
 
 async function getCourseList() {
-    const query = `query($pageNo: Int){
-        list (pageNo: $pageNo){
-            id,name,price,summary
-        }
-    }`;
-    const resp = await request(config.baseApiUrl + 'course', query);
-    return resp.list;
+    const resp = await coureClient.query({
+        query: gql`
+            query($pageNo: Int){
+                list (pageNo: $pageNo){
+                    id,name,price,summary
+                }
+            }
+        `,
+        // fetchPolicy: 'network-only'
+        // pageNo is an optional arguments, so 'varaibles' is not mandatory.
+    })
+    return resp.data.list;
 }
 
-async function saveCourse(body:any, id?:number) {
-    id = id || 0;
+async function saveCourse(body: any, id?: number) {
     id /= 1;
-    const query = `
-    mutation($data: CourseInputType!){
-        save (data: $data){
-            id, name
-        }
-    }`;
-    
-    const data = {...body}
+    const data = { ...body }
     data.price = data.price / 1;
-    const resp = await request(config.baseApiUrl + 'course', query, {data});
-    return resp.save;
+    try {
+        const resp = await coureClient.mutate({
+            mutation: gql`
+                mutation($data: CourseInputType!){
+                    save (data: $data){
+                        id, name, summary, price
+                    }
+                }
+            `,
+            variables: {
+                data
+            },
+            update: (cache, { data }) => {
+                const COURSE_LIST = gql`
+                    query($pageNo: Int){
+                        list (pageNo: $pageNo){
+                            id,name,price,summary
+                        }
+                    }
+                `;
+                try {
+                    let { list } = cache.readQuery({ query: COURSE_LIST });
+                    list.push(data);
+                    cache.writeQuery({
+                        query: COURSE_LIST,
+                        data: {
+                            'list': list
+                        }
+                    });
+                } catch (e) {
+                    // We should always catch here,
+                    // as the cache may be empty or the query may fail
+                }
+            }
+        })
+        return resp.data.save
+    } catch (e) {
+        return {
+            error: 10,
+            message: e.message
+        }
+    }
 }
 
-async function deleteCourse(id:number) {
+async function deleteCourse(id: number) {
     id /= 1;
-    const query = `mutation($id: Int!){
-        remove (id: $id){
-            error, message
+    const resp = await coureClient.mutate({
+        mutation: gql`
+            mutation ($id: Int!){
+                remove (id: $id){
+                    error, message
+                }
+            }
+        `,
+        variables: {
+            id
         }
-    }`;
-    const resp = await request(config.baseApiUrl + 'course', query, {id});
-    return resp.remove;
+    })
+    return resp.data.remove;
 }
 
 export default {

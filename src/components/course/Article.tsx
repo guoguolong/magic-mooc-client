@@ -8,7 +8,7 @@ import MarkdownItAnchor from 'markdown-it-anchor'
 //  import MarkdownItTocDoneRight from 'markdown-it-toc-done-right'
 import hljs from 'highlight.js';
 import 'highlight.js/styles/solarized-dark.css';
-import { useParams, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 const mapStateToProps = (state: any) => {
     return {
