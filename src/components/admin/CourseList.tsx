@@ -44,8 +44,8 @@ export default () => {
     }, [])
     return (
         <div className="course-list">
-            <h1>课程管理</h1>
-            <Link to="/admin/course">新增课程</Link>
+            <h1>Course List</h1>
+            <Link to="/admin/course">Add Course</Link>
             <ul>
                 {courses}
             </ul>
