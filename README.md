@@ -1,6 +1,6 @@
-A Magic MOOC Platform 
+A Magic MOOC Website 
 
-The project build on below these technoligies
+### The project build with below these technologies
 
 * react (hook)
 * redux
