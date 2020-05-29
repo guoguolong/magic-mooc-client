@@ -8,7 +8,7 @@ const mapStateToProps = (state: any) => {
     }
 }
 export default connect(mapStateToProps)(Chapter)
-function Chapter({ course, dispatch }: any) {
+function Chapter({ course }: any) {
     const {courseId, articleId} =  useParams();
     const list = iterate(course.articles, courseId, articleId);
     return (
