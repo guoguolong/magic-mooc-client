@@ -5,8 +5,9 @@ A Magic MOOC Website
 * react (hook)
 * redux
 * react-rouer
-* formik，yup
-* apollo
+* formik, yup
+* graphql, graphql.macro
+* apollo-boost
 
 ### Run the app in the development mode.
 
