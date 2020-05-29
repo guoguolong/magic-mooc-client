@@ -6,7 +6,7 @@ The project build on below these technoligies
 * redux
 * react-rouer
 * formik，yup
-* graphql-request
+* apollo
 
 ### Run the app in the development mode.
 
