@@ -45,7 +45,7 @@ export default () => {
     return (
         <div className="course-list">
             <h1>Course List</h1>
-            <Link to="/admin/course">Add Course</Link>
+            <Link to="/admin/course">New Course</Link>
             <ul>
                 {courses}
             </ul>
