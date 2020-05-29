@@ -1,21 +1,24 @@
 import ApolloClient from 'apollo-boost'
-import gql from 'graphql-tag';
 import config from './config';
 
-const coureClient = new ApolloClient({
+// import { COURSE_LIST, COURSE_DETAIL, COURSE_SUMMARY, COURSE_SAVE, COURSE_REMOVE, ARTICLE_DETAIL } from './gql-bridge'
+
+import { loader } from 'graphql.macro';
+const COURSE_LIST = loader('./fixtures/course-list.gql');
+const COURSE_DETAIL = loader('./fixtures/course-detail.gql');
+const COURSE_SUMMARY = loader('./fixtures/course-summary.gql');
+const COURSE_SAVE = loader('./fixtures/course-save.gql');
+const COURSE_REMOVE = loader('./fixtures/course-remove.gql');
+const ARTICLE_DETAIL = loader('./fixtures/article-detail.gql');
+
+const courseClient = new ApolloClient({
     uri: config.baseApiUrl + 'course'
 });
 
 async function getCourseDetail(id: number) {
     id = id / 1;
-    const resp = await coureClient.query({
-        query: gql`
-            query($id: Int!){
-                detail (id: $id){
-                    id,name,price,summary
-                }
-            }
-        `,
+    const resp = await courseClient.query({
+        query: COURSE_DETAIL,
         variables: {
             id
         }
@@ -24,14 +27,8 @@ async function getCourseDetail(id: number) {
 }
 
 async function getCourseList() {
-    const resp = await coureClient.query({
-        query: gql`
-            query($pageNo: Int){
-                list (pageNo: $pageNo){
-                    id,name,price,summary
-                }
-            }
-        `,
+    const resp = await courseClient.query({
+        query: COURSE_LIST,
         // fetchPolicy: 'network-only'
         // pageNo is an optional arguments, so 'varaibles' is not mandatory.
     })
@@ -43,25 +40,12 @@ async function saveCourse(body: any, id?: number) {
     const data = { ...body }
     data.price = data.price / 1;
     try {
-        const resp = await coureClient.mutate({
-            mutation: gql`
-                mutation($data: CourseInputType!){
-                    save (data: $data){
-                        id, name, summary, price
-                    }
-                }
-            `,
+        const resp = await courseClient.mutate({
+            mutation: COURSE_SAVE,
             variables: {
                 data
             },
             update: (cache, { data }) => {
-                const COURSE_LIST = gql`
-                    query($pageNo: Int){
-                        list (pageNo: $pageNo){
-                            id,name,price,summary
-                        }
-                    }
-                `;
                 try {
                     let { list } = cache.readQuery({ query: COURSE_LIST });
                     list.push(data);
@@ -88,14 +72,8 @@ async function saveCourse(body: any, id?: number) {
 
 async function deleteCourse(id: number) {
     id /= 1;
-    const resp = await coureClient.mutate({
-        mutation: gql`
-            mutation ($id: Int!){
-                remove (id: $id){
-                    error, message
-                }
-            }
-        `,
+    const resp = await courseClient.mutate({
+        mutation: COURSE_REMOVE,
         variables: {
             id
         }
@@ -103,9 +81,39 @@ async function deleteCourse(id: number) {
     return resp.data.remove;
 }
 
+async function getCourseSummary(courseId: number) {
+    courseId = courseId / 1;
+    let courseClient = new ApolloClient({
+        uri: config.baseApiUrl + 'course'
+    });
+    const resp = await courseClient.query({
+        query: COURSE_SUMMARY,
+        variables: {
+            courseId
+        }
+    })
+    return resp.data.summary;
+}
+
+async function fetchArticle(articleId: number) {
+    articleId = articleId / 1;
+    const client = new ApolloClient({
+        uri: config.baseApiUrl + 'article'
+    });
+    const resp = await client.query({
+        query: ARTICLE_DETAIL,
+        variables: {
+            id: articleId
+        }
+    })
+    return resp.data.detail
+};
+
 export default {
     getCourseDetail,
     getCourseList,
+    getCourseSummary,
     saveCourse,
-    deleteCourse
+    deleteCourse,
+    fetchArticle,
 }

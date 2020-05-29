@@ -1,4 +1,3 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { override, addLessLoader, overrideDevServer } = require("customize-cra");
 
 const multipleEntry = require('react-app-rewire-multiple-entry')([
@@ -30,7 +29,7 @@ module.exports = {
                         { from: /^\/admin/, to: '/admin.html' },
                         { from: /^\//, to: '/index.html' }
                     ]
-                  }
+                }
             }
         }
     )

@@ -1,0 +1,43 @@
+query CourseDetail($id: Int!){
+    detail (id: $id){
+        id,name,price,summary
+    }
+}
+
+query CourseList($pageNo: Int){
+    list (pageNo: $pageNo){
+        id,name,price,summary
+    }
+}
+
+mutation CourseSave($data: CourseInputType!){
+    save (data: $data){
+        id, name, summary, price
+    }
+}
+
+mutation CourseRemove($id: Int!){
+    remove (id: $id){
+        error, message
+    }
+}
+
+query CourseSummary($courseId: Int!){
+    summary (id: $courseId) {
+        id,name,summary,start_article_id,activeArticle{
+                id,name,content
+            },articles {
+            id,name,seq, parent_id,level,children {
+                id,name,seq,parent_id,level,children {
+                    id,name,seq,parent_id,level
+                }
+            }
+        }
+    }
+}
+
+query ArticleDetail($id: Int!){
+    detail (id: $id){
+        id,name,content
+    }
+}

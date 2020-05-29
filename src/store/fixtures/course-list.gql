@@ -1,0 +1,5 @@
+query ($pageNo: Int){
+    list (pageNo: $pageNo){
+        id,name,price,summary
+    }
+}

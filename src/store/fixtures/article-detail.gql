@@ -1,0 +1,5 @@
+query ArticleDetail($id: Int!){
+    detail (id: $id){
+        id,name,content
+    }
+}

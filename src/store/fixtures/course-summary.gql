@@ -1,0 +1,13 @@
+query CourseSummary($courseId: Int!){
+    summary (id: $courseId) {
+        id,name,summary,start_article_id,activeArticle{
+                id,name,content
+            },articles {
+            id,name,seq, parent_id,level,children {
+                id,name,seq,parent_id,level,children {
+                    id,name,seq,parent_id,level
+                }
+            }
+        }
+    }
+}
