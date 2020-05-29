@@ -16,7 +16,7 @@ async function getCourseList() {
     return axioResp.data;
 }
 
-async function courseSave(body:any, id?:number) {
+async function saveCourse(body:any, id?:number) {
     id = id || 0;
     const axioResp = await axios.post(config.baseApiUrl + 'course/save/' + id, body);
     return axioResp.data;
@@ -25,6 +25,6 @@ async function courseSave(body:any, id?:number) {
 export default {
     getCourseDetail,
     getCourseList,
-    courseSave,
+    saveCourse,
     deleteCourse
 }
