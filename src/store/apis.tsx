@@ -28,14 +28,21 @@ async function saveCourse(body:any, id?:number) {
     const query = `
     mutation($data: CourseInputType!){
         save (data: $data){
-            id, name
+            id, name, summary, price
         }
     }`;
     
     const data = {...body}
     data.price = data.price / 1;
-    const resp = await request(config.baseApiUrl + 'course', query, {data});
-    return resp.save;
+    try {
+        const resp = await request(config.baseApiUrl + 'course', query, {data});
+        return resp.save;
+    } catch(e) {
+        return {
+            error: 100,
+            message: e.message
+        }
+    }
 }
 
 async function deleteCourse(id:number) {

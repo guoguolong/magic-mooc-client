@@ -10,12 +10,12 @@ export default function Page() {
                 <div className="header-logo">
                     <div className="mobile-logo">
                         <a href="/" className="logo-link">
-                            <img src="/assets/images/logo.svg" />
+                            <img src="/assets/images/logo.svg" alt="logo" />
                         </a>
                     </div>
                     <div className="desktop-logo">
                         <a href="/" className="logo-link">
-                            <img src="/assets/images/logo.svg" />
+                            <img src="/assets/images/logo.svg" alt="logo" />
                         </a>
                     </div>
                 </div>
@@ -31,17 +31,17 @@ export default function Page() {
                         </a>
                     </div>
                     <div className="item">
-                        <a href="">
+                        <a href="/">
                             <span>About</span>
                         </a>
                     </div>
                     <div className="item">
-                        <a href="">
+                        <a href="/">
                             <span>Term</span>
                         </a>
                     </div>
                     <div className="item">
-                        <a href="">
+                        <a href="/">
                             <span>Privacy</span>
                         </a>
                     </div>

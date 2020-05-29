@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Article from './course/Article'
 import Chapter from './course/Chapter'
 import actions from '../store/actions'
-import { useRouteMatch, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 const mapStateToProps = (state: any) => {

@@ -1,18 +1,5 @@
 import { combineReducers } from 'redux'
 
-function setActiveArticle(articles: Array<any>, paths: Array<number>) {
-    paths = paths || [];
-    const currArticle = articles[paths[0]];
-    if (!currArticle) return;
-    currArticle.is_open = true;
-    if (paths.length == 1) { // 路径中的最后一个节点(当前节点)
-        currArticle.is_active = true;
-    }
-    if (currArticle.children) {
-        setActiveArticle(currArticle.children, paths.slice(1));
-    }
-}
-
 interface CouseState {
     articles: Array<any>,
     activeArticle: any

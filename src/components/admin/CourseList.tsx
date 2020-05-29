@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import apis from '../../store/apis'
 import '../../assets/styles/admin/course-list.less'
-import { useParams } from 'react-router-dom';
 
 function CourseItem({item, updateCourses}:any) {
     return (
@@ -45,8 +44,8 @@ export default () => {
     }, [])
     return (
         <div className="course-list">
-            <h1>课程管理</h1>
-            <Link to="/admin/course">新增课程</Link>
+            <h1>Course List</h1>
+            <Link to="/admin/course">Add Course</Link>
             <ul>
                 {courses}
             </ul>
