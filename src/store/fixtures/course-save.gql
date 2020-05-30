@@ -1,5 +1,7 @@
 mutation ($data: CourseInputType!){
-    save (data: $data){
-        id, name, summary, price
+    course {
+        save (data: $data){
+            id, name, summary, price
+        }
     }
 }

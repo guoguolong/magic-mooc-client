@@ -1,5 +1,7 @@
 mutation CourseRemove($id: Int!){
-    remove (id: $id){
-        error, message
+    course {
+        remove (id: $id){
+            error, message
+        }
     }
 }

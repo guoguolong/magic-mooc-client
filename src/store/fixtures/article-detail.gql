@@ -1,5 +1,7 @@
 query ArticleDetail($id: Int!){
-    detail (id: $id){
-        id,name,content
+    article {
+        detail (id: $id){
+            id,name,content
+        }
     }
 }

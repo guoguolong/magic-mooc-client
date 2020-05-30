@@ -11,28 +11,29 @@ const COURSE_SAVE = loader('./fixtures/course-save.gql');
 const COURSE_REMOVE = loader('./fixtures/course-remove.gql');
 const ARTICLE_DETAIL = loader('./fixtures/article-detail.gql');
 
-const courseClient = new ApolloClient({
-    uri: config.baseApiUrl + 'course'
-});
-
+function getApolloClient() {
+    return new ApolloClient({
+        uri: config.baseApiUrl + 'graphql'
+    })    
+}
 async function getCourseDetail(id: number) {
     id = id / 1;
-    const resp = await courseClient.query({
+    const resp = await getApolloClient().query({
         query: COURSE_DETAIL,
         variables: {
             id
         }
     })
-    return resp.data.detail;    
+    return resp.data.course.detail;    
 }
 
 async function getCourseList() {
-    const resp = await courseClient.query({
+    const resp = await getApolloClient().query({
         query: COURSE_LIST,
         // fetchPolicy: 'network-only'
         // pageNo is an optional arguments, so 'varaibles' is not mandatory.
     })
-    return resp.data.list;
+    return resp.data.course.list;
 }
 
 async function saveCourse(body: any, id?: number) {
@@ -40,7 +41,7 @@ async function saveCourse(body: any, id?: number) {
     const data = { ...body }
     data.price = data.price / 1;
     try {
-        const resp = await courseClient.mutate({
+        const resp = await getApolloClient().mutate({
             mutation: COURSE_SAVE,
             variables: {
                 data
@@ -61,7 +62,7 @@ async function saveCourse(body: any, id?: number) {
                 }
             }
         })
-        return resp.data.save
+        return resp.data.course.save
     } catch (e) {
         return {
             error: 10,
@@ -72,41 +73,35 @@ async function saveCourse(body: any, id?: number) {
 
 async function deleteCourse(id: number) {
     id /= 1;
-    const resp = await courseClient.mutate({
+    const resp = await getApolloClient().mutate({
         mutation: COURSE_REMOVE,
         variables: {
             id
         }
     })
-    return resp.data.remove;
+    return resp.data.course.remove;
 }
 
 async function getCourseSummary(courseId: number) {
     courseId = courseId / 1;
-    let courseClient = new ApolloClient({
-        uri: config.baseApiUrl + 'course'
-    });
-    const resp = await courseClient.query({
+    const resp = await getApolloClient().query({
         query: COURSE_SUMMARY,
         variables: {
             courseId
         }
     })
-    return resp.data.summary;
+    return resp.data.course.summary;
 }
 
 async function fetchArticle(articleId: number) {
     articleId = articleId / 1;
-    const client = new ApolloClient({
-        uri: config.baseApiUrl + 'article'
-    });
-    const resp = await client.query({
+    const resp = await getApolloClient().query({
         query: ARTICLE_DETAIL,
         variables: {
             id: articleId
         }
     })
-    return resp.data.detail
+    return resp.data.article.detail
 };
 
 export default {
