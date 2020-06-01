@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks';
-import { COURSE_SUMMARY } from '../../store/gql-api'
+import { COURSE_SUMMARY } from '../../store/gql-def'
 
 export default function Chapter() {
     let course: any = {};

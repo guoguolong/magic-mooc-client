@@ -35,11 +35,13 @@ function setActiveArticlePath(articles: Array<any>, paths: Array<number>) {
     }
 }
 
-function parseMD(course: any) {
+function parseMD(course: any, callback: any) {
     const mdContent = (course && course.activeArticle) ? course.activeArticle.content : '';
     if (!mdContent) return mdContent;
 
     function tocCallback(html: any, ast: any) {
+        // console.error(ast)
+        callback(html, ast)
         // dispatch({
         //     type: 'TOC_REFRESH',
         //     ast
@@ -78,7 +80,6 @@ export default {
             articleId = parseInt(courseObj.start_article_id);
         } else {
             courseObj.activeArticle = articleObj
-            console.error('Course: courseObj.activeArticle>>>', articleId, courseObj.activeArticle.name)
         }
         courseObj.activeArticle = articleObj
 
@@ -86,9 +87,5 @@ export default {
         courseObj.path_ids_map = iteratePathIds(courseObj.articles);
         setActiveArticlePath(courseObj.articles, courseObj.path_ids_map[articleId])
         return courseObj;
-
-                // // 神奇的语句，如果不设置该 state，course.activeArticle是旧的值
-                // setArticle(courseObj.activeArticle)
-
     }
 }

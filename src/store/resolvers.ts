@@ -1,11 +1,25 @@
 import gql from 'graphql-tag';
 // import { ApolloCache } from 'apollo-cache';
 // import { Resolvers } from 'apollo-client'
-
+import { FETCH_TOC } from './gql-def'
 export const typeDefs = gql`
+  type TOC {
+    l: Int,
+    n: String,
+    c: [TOC]
+  }
+
+  extend type Query {
+    toc: String,
+    activeTocHash: String
+  }
   extend type ArticleTreeType {
     is_open: Boolean,
     is_active: Boolean
+  }
+
+  extend type Mutation {
+    updateTOCData(toc: TOC!): void
   }
 `;
 
@@ -32,5 +46,11 @@ export const resolvers = {
     is_active: (articleTree, _, { cache }): boolean => {
       return false;
     }
-  }
+  },
+  Mutation: {
+    updateTOCData: (_, { toc } , { cache }): void => {
+      console.error(toc)
+      cache.writeQuery({ query: FETCH_TOC, toc });
+    },
+  },
 };

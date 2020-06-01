@@ -68,4 +68,16 @@ export const ARTICLE_DETAIL = gql`
             }
         }
     }
-`
+`;
+
+export const FETCH_TOC = gql`
+    query {
+        toc @client
+    }
+`;
+
+export const UPDATE_TOC_DATA = gql`
+    mutation ($toc: TOC) {
+        updateTOCData(toc: $toc) @client
+    }
+`;

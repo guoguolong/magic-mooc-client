@@ -3,7 +3,7 @@ import Article from './course/Article'
 import Chapter from './course/Chapter'
 import { useParams } from 'react-router-dom'
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
-import { COURSE_SUMMARY, ARTICLE_DETAIL } from '../store/gql-api'
+import { COURSE_SUMMARY, ARTICLE_DETAIL } from '../store/gql-def'
 import apis from '../store/apis'
 
 export default function Course() {

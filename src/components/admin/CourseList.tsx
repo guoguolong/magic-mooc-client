@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import { useQuery, useMutation} from '@apollo/react-hooks';
-import { COURSE_LIST, COURSE_REMOVE } from '../../store/gql-api'
+import { COURSE_LIST, COURSE_REMOVE } from '../../store/gql-def'
 import '../../assets/styles/admin/course-list.less'
 
 function CourseItem({item}:any) {

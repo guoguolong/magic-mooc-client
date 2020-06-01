@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { COURSE_DETAIL, COURSE_SAVE, COURSE_LIST } from '../../store/gql-api'
+import { COURSE_DETAIL, COURSE_SAVE, COURSE_LIST } from '../../store/gql-def'
 import apis from '../../store/apis'
 import '../../assets/styles/admin/course-edit.less'
 import { useParams, Redirect, Link } from 'react-router-dom';
