@@ -1,51 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
-import apis from '../../store/apis'
+import { useQuery, useMutation} from '@apollo/react-hooks';
+import { COURSE_LIST, COURSE_REMOVE } from '../../store/gql-api'
 import '../../assets/styles/admin/course-list.less'
 
-function CourseItem({item, updateCourses}:any) {
+function CourseItem({item}:any) {
+    const [remove, { loading, error }] = useMutation(
+        COURSE_REMOVE,
+        {
+          variables: { id: item.id },
+          refetchQueries: [
+            {
+              query: COURSE_LIST
+            },
+          ]
+        }
+    );
+
     return (
         <li>
             <span>{item.id}</span>
             <span><Link to={'/admin/course/' + item.id}>{item.name}</Link></span>
             <span>¥{item.price}</span>
             <span className="summary" title={item.summary}>{item.summary}</span>
-            <span className="button" onClick={async ()=>{
-                 const resp = await apis.deleteCourse(item.id)
-                 if (!resp.error) {
-                     updateCourses(item.id)
-                 }
-            }}>[DELETE]</span>
+            <span className="button" onClick={async ()=> remove()}>[DELETE]</span>
         </li>
     )
 }
 export default () => {
     const [courses, setCourses] = useState([]);
+    const { data, loading, error } = useQuery(
+        COURSE_LIST
+    );
+
     useEffect(() => {
         (async () => {
-            function updateCourses(id:number) {
-                courseList = courseList.filter(it=> {
-                    return (it.id !== id)
+            if (data && data.course && data.course.list) {
+                const list = data.course.list.map(item => {
+                    return <CourseItem key={item.id} item={item} />
                 })
-
-                const compList = courseList.map(it=> {
-                    return <CourseItem key={it.id} item={it} updateCourses={updateCourses} />
-                })
-
-                setCourses(compList);
+                setCourses(list);
             }
-            let courseList = await apis.getCourseList();
-
-            const list = courseList.map(item => {
-                return <CourseItem key={item.id} item={item} updateCourses={updateCourses} />
-            })
-            setCourses(list);
         })();
-    }, [])
+    }, [data])
+
+    if (loading) return <p className="loading">Loading...</p>;
+    if (error) return <p>ERROR: {error.message}</p>;
+
     return (
         <div className="course-list">
             <h1>Course List</h1>
-            <Link to="/admin/course">New Course</Link>
+            <Link to="/admin/course">[New Course]</Link>
             <ul>
                 {courses}
             </ul>

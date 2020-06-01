@@ -1,7 +1,0 @@
-mutation CourseRemove($id: Int!){
-    course {
-        remove (id: $id){
-            error, message
-        }
-    }
-}

@@ -1,7 +1,0 @@
-mutation ($data: CourseInputType!){
-    course {
-        save (data: $data){
-            id, name, summary, price
-        }
-    }
-}

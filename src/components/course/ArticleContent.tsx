@@ -4,18 +4,18 @@ import { useLocation } from 'react-router-dom'
 
 const mapStateToProps = (state: any) => {
     return {
-        course: state.course,
         activeTocHash: state.activeTocHash,
     }
 }
 export default connect(mapStateToProps)(ArticleContent)
 
-function ArticleContent({ course, content, activeTocHash, dispatch }: any) {
+function ArticleContent({ course, mdContent, activeTocHash }: any) {
     const location = useLocation();
     activeTocHash = location.hash || activeTocHash;
     let win:any = window;
+
     useEffect(() => {
-        if (!content) return;
+        if (!mdContent) return;
         if (activeTocHash && location.hash) {
             const tObj: any = document.getElementById(activeTocHash.replace(/^#/, ''));
             if (tObj) {
@@ -43,11 +43,11 @@ function ArticleContent({ course, content, activeTocHash, dispatch }: any) {
         <div className="page-container">
             <div className="page-header">
                 <div className="page-header-inner">
-                    <h1>{course.activeArticle.name}</h1>
+                    <h1>{course.activeArticle && course.activeArticle.name}</h1>
                     <i className="fas fa-list-ul mobile-toc-icon"></i>
                 </div>
             </div>
-            <div className="page-body" dangerouslySetInnerHTML={{ __html: content }}>
+            <div className="page-body" dangerouslySetInnerHTML={{ __html: mdContent }}>
             </div>
             <div className="page-footer">
             </div>

@@ -1,7 +1,0 @@
-query ($id: Int!){
-    course {
-        detail (id: $id){
-            id,name,price,summary
-        }
-    }
-}

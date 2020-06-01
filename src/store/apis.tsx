@@ -1,114 +1,94 @@
-import ApolloClient from 'apollo-boost'
-import config from './config';
+import MarkdownIt from 'markdown-it';
+import MarkdownItAnchor from 'markdown-it-anchor'
+//  import MarkdownItTocDoneRight from 'markdown-it-toc-done-right'
+import hljs from 'highlight.js';
 
-// import { COURSE_LIST, COURSE_DETAIL, COURSE_SUMMARY, COURSE_SAVE, COURSE_REMOVE, ARTICLE_DETAIL } from './gql-bridge'
+function iteratePathIds(articles: Array<any>, parentIds?: Array<number>) {
+    let pathIdsMap: any = {}
+    Object.values(articles).map(item => {
+        parentIds = parentIds || []
+        item.path_ids = parentIds.concat(item.id);
+        pathIdsMap[item.id] = item.path_ids;
 
-import { loader } from 'graphql.macro';
-const COURSE_LIST = loader('./fixtures/course-list.gql');
-const COURSE_DETAIL = loader('./fixtures/course-detail.gql');
-const COURSE_SUMMARY = loader('./fixtures/course-summary.gql');
-const COURSE_SAVE = loader('./fixtures/course-save.gql');
-const COURSE_REMOVE = loader('./fixtures/course-remove.gql');
-const ARTICLE_DETAIL = loader('./fixtures/article-detail.gql');
-
-function getApolloClient() {
-    return new ApolloClient({
-        uri: config.baseApiUrl + 'graphql'
-    })    
-}
-async function getCourseDetail(id: number) {
-    id = id / 1;
-    const resp = await getApolloClient().query({
-        query: COURSE_DETAIL,
-        variables: {
-            id
+        item.is_open = false;
+        item.is_active = false;
+        if (item.children) {
+            const b = iteratePathIds(item.children, item.path_ids);
+            pathIdsMap = Object.assign(pathIdsMap, b)
         }
+        return true;
     })
-    return resp.data.course.detail;    
+    return pathIdsMap;
 }
 
-async function getCourseList() {
-    const resp = await getApolloClient().query({
-        query: COURSE_LIST,
-        // fetchPolicy: 'network-only'
-        // pageNo is an optional arguments, so 'varaibles' is not mandatory.
-    })
-    return resp.data.course.list;
-}
-
-async function saveCourse(body: any, id?: number) {
-    id /= 1;
-    const data = { ...body }
-    data.price = data.price / 1;
-    try {
-        const resp = await getApolloClient().mutate({
-            mutation: COURSE_SAVE,
-            variables: {
-                data
-            },
-            update: (cache, { data }) => {
-                try {
-                    let { list } = cache.readQuery({ query: COURSE_LIST });
-                    list.push(data);
-                    cache.writeQuery({
-                        query: COURSE_LIST,
-                        data: {
-                            'list': list
-                        }
-                    });
-                } catch (e) {
-                    // We should always catch here,
-                    // as the cache may be empty or the query may fail
-                }
-            }
-        })
-        return resp.data.course.save
-    } catch (e) {
-        return {
-            error: 10,
-            message: e.message
-        }
+function setActiveArticlePath(articles: Array<any>, paths: Array<number>) {
+    paths = paths || [];
+    // const currArticle = articles[paths[0]]; // for git branch 'master', it's a map
+    const currArticle = articles.find(element => element.id === paths[0]);
+    if (!currArticle) return;
+    currArticle.is_open = true;
+    if (paths.length === 1) { // 路径中的最后一个节点(当前节点)
+        currArticle.is_active = true;
+    }
+    if (currArticle.children) {
+        setActiveArticlePath(currArticle.children, paths.slice(1));
     }
 }
 
-async function deleteCourse(id: number) {
-    id /= 1;
-    const resp = await getApolloClient().mutate({
-        mutation: COURSE_REMOVE,
-        variables: {
-            id
-        }
-    })
-    return resp.data.course.remove;
-}
+function parseMD(course: any) {
+    const mdContent = (course && course.activeArticle) ? course.activeArticle.content : '';
+    if (!mdContent) return mdContent;
 
-async function getCourseSummary(courseId: number) {
-    courseId = courseId / 1;
-    const resp = await getApolloClient().query({
-        query: COURSE_SUMMARY,
-        variables: {
-            courseId
-        }
-    })
-    return resp.data.course.summary;
-}
+    function tocCallback(html: any, ast: any) {
+        // dispatch({
+        //     type: 'TOC_REFRESH',
+        //     ast
+        // })
+    };
 
-async function fetchArticle(articleId: number) {
-    articleId = articleId / 1;
-    const resp = await getApolloClient().query({
-        query: ARTICLE_DETAIL,
-        variables: {
-            id: articleId
+    const md: any = MarkdownIt({
+        html: true,
+        xhtmlOut: true,
+        typographer: true,
+        highlight: function (str, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+                try {
+                    return '<pre class="hljs"><code>' +
+                        hljs.highlight(lang, str, true).value +
+                        '</code></pre>';
+                } catch (__) { }
+            }
+
+            return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
         }
-    })
-    return resp.data.article.detail
-};
+    }).use(MarkdownItAnchor, {
+        permalink: true,
+        permalinkBefore: true,
+        // permalinkSymbol: '§',
+    }).use(require('markdown-it-toc-done-right').default, {
+        callback: tocCallback
+    });
+    return md.render(mdContent)
+}
 
 export default {
-    getCourseDetail,
-    getCourseList,
-    getCourseSummary,
-    saveCourse,
-    deleteCourse,
-    fetchArticle,
+    parseMD,
+    updateClientCourse: function(courseObj, articleObj, articleId) {
+        if (!articleId) {
+            articleId = parseInt(courseObj.start_article_id);
+        } else {
+            courseObj.activeArticle = articleObj
+            console.error('Course: courseObj.activeArticle>>>', articleId, courseObj.activeArticle.name)
+        }
+        courseObj.activeArticle = articleObj
+
+        // client state： is_open, is_active
+        courseObj.path_ids_map = iteratePathIds(courseObj.articles);
+        setActiveArticlePath(courseObj.articles, courseObj.path_ids_map[articleId])
+        return courseObj;
+
+                // // 神奇的语句，如果不设置该 state，course.activeArticle是旧的值
+                // setArticle(courseObj.activeArticle)
+
+    }
 }

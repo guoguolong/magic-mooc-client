@@ -1,72 +1,34 @@
-import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useEffect, useState, useRef } from 'react'
+import { useQuery } from '@apollo/react-hooks';
 
 import ArticleContent from './ArticleContent'
 import ArticleTOC from './ArticleTOC'
-import MarkdownIt from 'markdown-it';
-import MarkdownItAnchor from 'markdown-it-anchor'
-//  import MarkdownItTocDoneRight from 'markdown-it-toc-done-right'
-import hljs from 'highlight.js';
 import 'highlight.js/styles/solarized-dark.css';
-import { withRouter } from 'react-router-dom'
+import apis from '../../store/apis'
+import { COURSE_SUMMARY } from '../../store/gql-api'
 
-const mapStateToProps = (state: any) => {
-    return {
-        course: state.course,
+export default function Article({ course: courseObj }: any) {
+    const [course, setCourse]: any = useState({ activeArticle: {} })
+    const [mdContent, setMDContent] = useState('');
+    const { data: summaryData, loading, error } = useQuery(
+        COURSE_SUMMARY, {
+        variables: {
+            courseId: courseObj.id
+        }
     }
-}
-
-function parseMD(course: any, dispatch: any) {
-    const mdContent = course.activeArticle ? course.activeArticle.content : '';
-
-    function tocCallback(html: any, ast: any) {
-        dispatch({
-            type: 'TOC_REFRESH',
-            ast
-        })
-    };
-
-    const md: any = MarkdownIt({
-        html: true,
-        xhtmlOut: true,
-        typographer: true,
-        highlight: function (str, lang) {
-            if (lang && hljs.getLanguage(lang)) {
-                try {
-                    return '<pre class="hljs"><code>' +
-                        hljs.highlight(lang, str, true).value +
-                        '</code></pre>';
-                } catch (__) { }
-            }
-
-            return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
-        }
-    }).use(MarkdownItAnchor, {
-        permalink: true,
-        permalinkBefore: true,
-        // permalinkSymbol: '§',
-    }).use(require('markdown-it-toc-done-right').default, {
-        callback: tocCallback
-    });
-    return md.render(mdContent)
-}
-
-export default connect(mapStateToProps)(withRouter(Article))
-
-function Article({ course, dispatch }: any) {
-    const  [mdContent, setMDContent] = useState('');
+    );
     useEffect(() => {
-        if (course.id) {
-            const content = parseMD(course, dispatch);
-            if (mdContent !== content) {
-                setMDContent(content);
-            }
+        if (summaryData) {
+            const realCourse = summaryData.course.summary;
+            const newContent = apis.parseMD(realCourse);
+            setCourse(realCourse)
+            setMDContent(newContent);
         }
-    }, [course]);
+    });
     return (
         <div className="whole-content-page">
             <div className="whole-content-sticky">
-                <ArticleContent course={course} content={mdContent}></ArticleContent>
+                <ArticleContent course={course} mdContent={mdContent}></ArticleContent>
                 <ArticleTOC />
             </div>
         </div>

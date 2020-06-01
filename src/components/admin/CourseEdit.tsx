@@ -1,27 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import { COURSE_DETAIL, COURSE_SAVE, COURSE_LIST } from '../../store/gql-api'
 import apis from '../../store/apis'
 import '../../assets/styles/admin/course-edit.less'
 import { useParams, Redirect, Link } from 'react-router-dom';
 
 export default () => {
-    const [course, setCourse] = useState({ name: '', id: 0, summary: '', price: 0});
+    const [course, setCourse] = useState({ name: '', id: 0, summary: '', price: 0 });
     const [saved, setSaved] = useState(false);
     const [message, setMessage] = useState('');
     let { courseId } = useParams();
-    courseId = courseId || 0;
+    courseId = courseId / 1;
+
+    let courseResp;
+    if (courseId) {
+        courseResp = useQuery(
+            COURSE_DETAIL,
+            { variables: { id: courseId } }
+        );
+    }
+
+    const [saveCourse, { loading, error }] = useMutation(COURSE_SAVE);
+
     useEffect(() => {
-        (async () => {
-            let courseObj = await apis.getCourseDetail(courseId);
-            if (courseObj)
-                setCourse(courseObj);
-        })();
-    }, [courseId])
+        if (courseResp && courseResp.data) {
+            setCourse(courseResp.data.course.detail);
+        }
+    }, [courseResp])
+
     return (
         <div className="form-container">
             <h1>Course Edit</h1>
-            <Link to="/admin">Back to list</Link>
+            <Link to="/admin">[Back to list]</Link>
             <Formik
                 enableReinitialize={true}
                 initialValues={{ name: course.name, id: course.id, summary: course.summary, price: course.price }}
@@ -36,12 +48,27 @@ export default () => {
                         .required('Required'),
                 })}
                 onSubmit={async (values, { setSubmitting }) => {
-                    const resp = await apis.saveCourse(values, courseId);
-                    if (resp.error) {
-                        setMessage(resp.message);
-                    } else {
-                        setCourse(resp);
-                        setSaved(true)
+                    values.price /= 1;
+                    try {
+                        const resp: any = await saveCourse({
+                            variables: {
+                                data: values,
+                            },
+                            update(cache, { data }) {
+                                try {
+                                    const { course } = cache.readQuery({ query: COURSE_LIST });
+                                    cache.writeQuery({
+                                        query: COURSE_LIST,
+                                        data: { course: course.list.concat([data.course.save]) },
+                                    });
+                                } catch (e) {
+                                    // cache COURSE_LIST could be empty.
+                                }
+                                setSaved(true); // redirect to /admin if it's true.
+                            }
+                        })
+                    } catch (e) {
+                        setMessage(e.message);
                     }
                 }}
             >

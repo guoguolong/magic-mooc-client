@@ -1,7 +1,0 @@
-query ArticleDetail($id: Int!){
-    article {
-        detail (id: $id){
-            id,name,content
-        }
-    }
-}

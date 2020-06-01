@@ -1,7 +1,0 @@
-query ($pageNo: Int){
-    course {
-        list (pageNo: $pageNo){
-            id,name,price,summary
-        }
-    }
-}

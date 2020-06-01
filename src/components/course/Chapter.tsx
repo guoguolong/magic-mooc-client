@@ -1,15 +1,19 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
+import { useQuery } from '@apollo/react-hooks';
+import { COURSE_SUMMARY } from '../../store/gql-api'
 
-const mapStateToProps = (state: any) => {
-    return {
-        course: state.course,
+export default function Chapter() {
+    let course: any = {};
+
+    let { courseId,articleId } = useParams();
+    courseId /= 1;
+    const { data: summaryData } = useQuery(COURSE_SUMMARY, { variables: { courseId } });
+
+    // console.error('chapeter data>>>', summaryData)
+    if (summaryData) {
+        course = summaryData.course.summary;
     }
-}
-export default connect(mapStateToProps)(Chapter)
-function Chapter({ course, dispatch }: any) {
-    const {courseId, articleId} =  useParams();
     const list = iterate(course.articles, courseId, articleId);
     return (
         <div className="content-nav" id="sidebar">
@@ -23,12 +27,13 @@ function Chapter({ course, dispatch }: any) {
     )
 }
 
-function iterate(articleMap: Array<any>, courseId:string, activeArticleId:string, level?: number): any {
+function iterate(articleMap: Array<any>, courseId: string, activeArticleId: string, level?: number): any {
     level = level || 1;
     let articles = articleMap;
+    articles = articles || []
     // Object.values(articleMap);
-    articles = articles.sort(function(a:any, b:any):number {
-        return (a.seq < b.seq) ? -1: 1;
+    articles = articles.sort(function (a: any, b: any): number {
+        return (a.seq < b.seq) ? -1 : 1;
     })
     return articles.map((item: any) => {
         let subMenus = <></>;
@@ -37,6 +42,7 @@ function iterate(articleMap: Array<any>, courseId:string, activeArticleId:string
         if (item.is_active) {
             aClass += ' active';
         }
+        // console.warn(item.id, item.is_open, item.is_active)
         if (item.id === activeArticleId) {
             item.is_open = true;
             item.active = true;
