@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import { FETCH_TOC } from '../../store/gql-def'
 
-export default connect()(ArticleTOC)
-function ArticleTOC({ dispatch }: any) {
+export default function ArticleTOC() {
+    const apolloClient = useApolloClient();
     const location  = useLocation();
     const anchorHash = location.hash.slice(1);
 
@@ -15,11 +14,12 @@ function ArticleTOC({ dispatch }: any) {
         renderedToc = renderToc(data.toc, anchorHash);
     }
     useEffect(()=>{
+        // setTimeout(() => {
+        //     win.utils.activateTOCAnchor(anchorHash, true)
+        // }, 1000)
         win.utils.activateTOCAnchor(anchorHash, true)
-        dispatch({
-            type: "TOC_ACTIVATE",
-            tocHash: activeTocHash
-        })
+        apolloClient.writeData({data: {activeTocHash: anchorHash}})
+        // apolloClient.writeQuery({ query: FETCH_ACTIVE_TOC_HASH, data: {activeTocHash: anchorHash} });
     }, [anchorHash])
     return (
         <div className="page-side">
@@ -46,7 +46,6 @@ function ArticleTOC({ dispatch }: any) {
     )
 }
 
-let activeTocHash = '';
 const win:any = window;
 function renderToc(toc: any, activeAnchorHash: string) {
     if (!toc || !toc.c || !toc.c.length) return;
@@ -67,9 +66,6 @@ function RenderTocItem({ level, toc, activeAnchorHash }: any) {
     win.tocs.push(anchorHash)
 
     let activeName = (toc.n && activeAnchorHash === anchorHash) ? 'active' : ''
-    if (activeName) {
-        activeTocHash = anchorHash
-    }
 
     let subTocContent = [];
     if (toc.c) {

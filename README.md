@@ -3,11 +3,9 @@ A Magic MOOC Website
 ### The project build with below these technologies
 
 * react (hook)
-* redux
 * react-rouer
 * formik, yup
-* graphql, graphql.macro
-* apollo-boost
+* graphql apollo-boost @apollo/react-hooks
 
 ### Run the app in the development mode.
 

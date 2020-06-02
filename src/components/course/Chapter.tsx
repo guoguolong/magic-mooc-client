@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks';
 import { COURSE_SUMMARY } from '../../store/gql-def'
@@ -7,7 +7,6 @@ export default function Chapter() {
     let course: any = {};
 
     let { courseId, articleId } = useParams();
-    // const [list, setList] = useState([]);
     articleId = (articleId || 0) / 1
     courseId = ((courseId || 0) / 1) || 10
 
@@ -15,7 +14,6 @@ export default function Chapter() {
 
     let list = [];
     if (summaryData) {
-        // console.error('Chapter:', new Date(), summaryData)
         list = iterate(summaryData.course.summary.articles, courseId, articleId);
     }
 

@@ -76,6 +76,12 @@ export const FETCH_TOC = gql`
     }
 `;
 
+export const FETCH_ACTIVE_TOC_HASH = gql`
+    query FetchActiveTocHash {
+        activeTocHash @client
+    }
+`;
+
 export const UPDATE_TOC_DATA = gql`
     mutation UpdateTOCData($toc: TOC) {
         updateTOCData(toc: $toc) @client

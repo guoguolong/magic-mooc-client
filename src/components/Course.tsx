@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Article from './course/Article'
 import Chapter from './course/Chapter'
 import { useParams } from 'react-router-dom'
-import { useQuery, useLazyQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
 import { COURSE_SUMMARY, ARTICLE_DETAIL } from '../store/gql-def'
 import apis from '../store/apis'
 

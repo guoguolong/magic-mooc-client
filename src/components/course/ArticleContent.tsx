@@ -1,17 +1,13 @@
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
 import { useLocation } from 'react-router-dom'
+import { useQuery } from '@apollo/react-hooks'
+import { FETCH_ACTIVE_TOC_HASH } from '../../store/gql-def'
 
-const mapStateToProps = (state: any) => {
-    return {
-        activeTocHash: state.activeTocHash,
-    }
-}
-export default connect(mapStateToProps)(ArticleContent)
-
-function ArticleContent({ article, mdContent, activeTocHash }: any) {
+export default function ArticleContent({ article, mdContent }: any) {
     const location = useLocation();
-    activeTocHash = location.hash || activeTocHash;
+    let { data } = useQuery(FETCH_ACTIVE_TOC_HASH);
+
+    const activeTocHash = location.hash || (data && data.activeTocHash);
     let win:any = window;
 
     useEffect(() => {

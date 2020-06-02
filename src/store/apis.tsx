@@ -36,17 +36,11 @@ function setActiveArticlePath(articles: Array<any>, paths: Array<number>) {
 }
 
 function parseMD(article: any, callback: any) {
-    // const mdContent = (course && course.activeArticle) ? course.activeArticle.content : '';
     const mdContent = article ? article.content : '';
     if (!mdContent) return mdContent;
 
     function tocCallback(html: any, ast: any) {
-        // console.error(ast)
         callback(html, ast)
-        // dispatch({
-        //     type: 'TOC_REFRESH',
-        //     ast
-        // })
     };
 
     const md: any = MarkdownIt({

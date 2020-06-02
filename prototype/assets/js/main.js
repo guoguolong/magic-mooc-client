@@ -14,7 +14,7 @@ var topHeight = 0;
         if (topHeight < 0) topHeight = 0;
         if (originTopHeight == 0 && topHeight == 0) {
             // do nothing.
-            console.log('do nothing.')
+            // console.log('do nothing.')
         } else {
             resize();
         }

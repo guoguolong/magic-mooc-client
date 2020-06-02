@@ -5,7 +5,7 @@ import { COURSE_LIST, COURSE_REMOVE } from '../../store/gql-def'
 import '../../assets/styles/admin/course-list.less'
 
 function CourseItem({item}:any) {
-    const [remove, { loading, error }] = useMutation(
+    const [remove] = useMutation(
         COURSE_REMOVE,
         {
           variables: { id: item.id },
