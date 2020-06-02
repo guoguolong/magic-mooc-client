@@ -48,9 +48,8 @@ export const resolvers = {
     }
   },
   Mutation: {
-    updateTOCData: (_, { toc } , { cache }): void => {
-      console.error(toc)
-      cache.writeQuery({ query: FETCH_TOC, toc });
+    updateTOCData: (_, { toc }, { cache }): void => {
+      cache.writeQuery({ query: FETCH_TOC, data: { toc } });
     },
   },
 };

@@ -1,25 +1,26 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useLocation } from 'react-router-dom'
+import { useQuery } from '@apollo/react-hooks'
+import { FETCH_TOC } from '../../store/gql-def'
 
-const mapStateToProps = (state: any) => {
-    return {
-        toc: state.toc
-    }
-}
-
-export default connect(mapStateToProps)(ArticleTOC)
-function ArticleTOC({ toc, dispatch }: any) {
+export default connect()(ArticleTOC)
+function ArticleTOC({ dispatch }: any) {
     const location  = useLocation();
     const anchorHash = location.hash.slice(1);
-    const renderedToc = renderToc(toc, anchorHash);
+
+    const { data } = useQuery(FETCH_TOC);
+    let renderedToc;
+    if (data) {
+        renderedToc = renderToc(data.toc, anchorHash);
+    }
     useEffect(()=>{
         win.utils.activateTOCAnchor(anchorHash, true)
         dispatch({
             type: "TOC_ACTIVATE",
             tocHash: activeTocHash
         })
-    })
+    }, [anchorHash])
     return (
         <div className="page-side">
             <div className="sticky-container">
