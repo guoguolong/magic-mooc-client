@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const COURSE_LIST = gql`
-    query ($pageNo: Int){
+    query CourseList($pageNo: Int){
         course {
             list (pageNo: $pageNo){
                 id,name,price,summary
@@ -11,7 +11,7 @@ export const COURSE_LIST = gql`
 `;
 
 export const COURSE_DETAIL = gql`
-    query ($id: Int!){
+    query CourseDetail($id: Int!){
         course {
             detail (id: $id){
                 id,name,price,summary
@@ -41,7 +41,7 @@ export const COURSE_SUMMARY = gql`
 `
 
 export const COURSE_SAVE = gql`
-    mutation ($data: CourseInputType!){
+    mutation CourseSave($data: CourseInputType!){
         course {
             save (data: $data){
                 id, name, summary, price
@@ -71,13 +71,13 @@ export const ARTICLE_DETAIL = gql`
 `;
 
 export const FETCH_TOC = gql`
-    query {
+    query FetchToc{
         toc @client
     }
 `;
 
 export const UPDATE_TOC_DATA = gql`
-    mutation ($toc: TOC) {
+    mutation UpdateTOCData($toc: TOC) {
         updateTOCData(toc: $toc) @client
     }
 `;

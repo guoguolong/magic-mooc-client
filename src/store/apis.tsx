@@ -35,8 +35,9 @@ function setActiveArticlePath(articles: Array<any>, paths: Array<number>) {
     }
 }
 
-function parseMD(course: any, callback: any) {
-    const mdContent = (course && course.activeArticle) ? course.activeArticle.content : '';
+function parseMD(article: any, callback: any) {
+    // const mdContent = (course && course.activeArticle) ? course.activeArticle.content : '';
+    const mdContent = article ? article.content : '';
     if (!mdContent) return mdContent;
 
     function tocCallback(html: any, ast: any) {
@@ -75,13 +76,13 @@ function parseMD(course: any, callback: any) {
 
 export default {
     parseMD,
-    updateClientCourse: function(courseObj, articleObj, articleId) {
-        if (!articleId) {
-            articleId = parseInt(courseObj.start_article_id);
-        } else {
+    updateClientCourse: function(courseObj, articleObj) {
+        let articleId = parseInt(courseObj.start_article_id);
+
+        if (articleObj) {
+            articleId = articleObj.id;
             courseObj.activeArticle = articleObj
         }
-        courseObj.activeArticle = articleObj
 
         // client state： is_open, is_active
         courseObj.path_ids_map = iteratePathIds(courseObj.articles);

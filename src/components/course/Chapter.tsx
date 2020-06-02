@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks';
 import { COURSE_SUMMARY } from '../../store/gql-def'
@@ -6,15 +6,19 @@ import { COURSE_SUMMARY } from '../../store/gql-def'
 export default function Chapter() {
     let course: any = {};
 
-    let { courseId,articleId } = useParams();
-    courseId /= 1;
+    let { courseId, articleId } = useParams();
+    // const [list, setList] = useState([]);
+    articleId = (articleId || 0) / 1
+    courseId = ((courseId || 0) / 1) || 10
+
     const { data: summaryData } = useQuery(COURSE_SUMMARY, { variables: { courseId } });
 
-    // console.error('chapeter data>>>', summaryData)
+    let list = [];
     if (summaryData) {
-        course = summaryData.course.summary;
+        // console.error('Chapter:', new Date(), summaryData)
+        list = iterate(summaryData.course.summary.articles, courseId, articleId);
     }
-    const list = iterate(course.articles, courseId, articleId);
+
     return (
         <div className="content-nav" id="sidebar">
             <div className="content-nav-inner">
@@ -42,7 +46,6 @@ function iterate(articleMap: Array<any>, courseId: string, activeArticleId: stri
         if (item.is_active) {
             aClass += ' active';
         }
-        // console.warn(item.id, item.is_open, item.is_active)
         if (item.id === activeArticleId) {
             item.is_open = true;
             item.active = true;

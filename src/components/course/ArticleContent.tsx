@@ -9,7 +9,7 @@ const mapStateToProps = (state: any) => {
 }
 export default connect(mapStateToProps)(ArticleContent)
 
-function ArticleContent({ course, mdContent, activeTocHash }: any) {
+function ArticleContent({ article, mdContent, activeTocHash }: any) {
     const location = useLocation();
     activeTocHash = location.hash || activeTocHash;
     let win:any = window;
@@ -43,7 +43,7 @@ function ArticleContent({ course, mdContent, activeTocHash }: any) {
         <div className="page-container">
             <div className="page-header">
                 <div className="page-header-inner">
-                    <h1>{course.activeArticle && course.activeArticle.name}</h1>
+                    <h1>{article && article.name}</h1>
                     <i className="fas fa-list-ul mobile-toc-icon"></i>
                 </div>
             </div>

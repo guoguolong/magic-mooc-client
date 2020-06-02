@@ -8,13 +8,11 @@ import apis from '../store/apis'
 
 export default function Course() {
     let { courseId, articleId } = useParams();
-    const [course, setCourse] = useState<any>({})
+    // const [course, setCourse] = useState<any>({})
     const [, setArticle] = useState<any>({})
-    const [pageId, setPageId] = useState(0);
 
-    articleId /= 1;
-    courseId /= 1;
-    courseId = courseId || 10;
+    articleId = (articleId || 0) / 1
+    courseId = ((courseId || 0) / 1) || 10
 
     const { data: summaryData } = useQuery(
         COURSE_SUMMARY, { variables: { courseId } }
@@ -23,20 +21,22 @@ export default function Course() {
     const { data: articleData } = useQuery(
         ARTICLE_DETAIL, { variables: { id: articleId } }
     );
+    // console.info('------course func.')
     useEffect(() => {
-        if (!summaryData || !articleData || !articleId || !courseId) return;
-        const courseObj = apis.updateClientCourse(summaryData.course.summary, articleData.article.detail, articleId)
+        if (!summaryData) return;
+        const articleObj = (articleData && articleData.article) && articleData.article.detail;
+        const courseObj = apis.updateClientCourse(summaryData.course.summary, articleObj)
 
         // 神奇的语句，如果不设置该 state，course.activeArticle是旧的值
         setArticle(courseObj.activeArticle)
-
-        setCourse(courseObj);
-        setPageId(articleId);
-    }, [summaryData, articleData, articleId, courseId])
+        // console.info('how causse. articleObj..', articleObj)
+        // setCourse(courseObj);
+        // console.error('Course courseObj>>>>', courseObj.id)
+    }, [summaryData, articleData])
     return (
         <div className="body-container">
             <Chapter />
-            <Article course={course} />
+            <Article/>
         </div>
     )
 }
