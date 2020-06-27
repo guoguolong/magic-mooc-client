@@ -1,6 +1,11 @@
-A Magic MOOC Website 
+A Magic MOOC Platform.
 
-### The project build with below these technologies
+## Preivew
+
+https://mooc.banyuan.club
+![](docs/magicmooc.png)
+
+## The project build with below these technologies
 
 * react (hook)
 * redux
@@ -8,13 +13,13 @@ A Magic MOOC Website
 * formik，yup
 * axios (RESTfull Style)
 
-### Run the app in the development mode.
+## Run the app in the development mode.
 
 `yarn start`
 
-### Launches the test runner in the interactive watch mode.
+## Launches the test runner in the interactive watch mode.
 
 `yarn test`
 
-### Builds the app for the production to the `build` folder.
+## Builds the app for the production to the `build` folder.
 `yarn build`
